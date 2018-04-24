@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `dbproject` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+USE `dbproject`;
 -- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: dbproject
@@ -176,11 +178,11 @@ DROP TABLE IF EXISTS `person`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `person` (
   `Active` tinyint(4) NOT NULL,
-  `PersonUid` varchar(32) NOT NULL,
-  `FirstName` varchar(45) DEFAULT NULL,
+  `PersonUid` varchar(37) NOT NULL,
+  `FirstName` varchar(90) DEFAULT NULL,
   `LastName` varchar(45) DEFAULT NULL,
   `MiddleName` varchar(45) DEFAULT NULL,
-  `Ssn` int(11) DEFAULT NULL,
+  `Ssn` varchar(11) DEFAULT NULL,
   `BirthDate` date DEFAULT NULL,
   `DeceasedBool` tinyint(4) DEFAULT NULL,
   `Gender` varchar(45) DEFAULT NULL,
@@ -196,7 +198,6 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES (1,'0',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -243,4 +244,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-23 16:38:22
+-- Dump completed on 2018-04-23 20:45:34
