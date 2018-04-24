@@ -162,11 +162,19 @@ for doctor in doctors:
     output = cursor.execute(sql)
     db.commit()
 
-cursor.execute("SELECT HEmployeeUid FROM hospitalemployee WHERE HEmployeeUid NOT IN (SELECT DoctorUid FROM doctor)")
+cursor.execute("SELECT HEmployeeUid FROM hospitalemployee WHERE HEmployeeUid NOT IN (SELECT DoctorUid FROM doctor) LIMIT 20")
 nurses = cursor.fetchall()
 
-for nurse in nurses:
-    #sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurse[0], )
-    print (nurse[0])
+i = 0
+
+for i in range(0, len(doctors)):
+    print (nurses[i][0], doctor[i][0])
+    sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurses[i][0], doctors[i][0], str(0))
+    cursor.execute(sql)
+    db.commit()
+    sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurses[i+1][0], doctors[i],[0], str(0))
+    cursor.excute(sql)
+    db.commit()
+    i += 1
 
 db.close()
