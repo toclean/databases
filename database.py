@@ -2,6 +2,7 @@ import mysql.connector as mariadb
 import uuid
 import random
 import time
+import string
 
 # load firstnames
 with open('first-names') as f:
@@ -52,10 +53,8 @@ def randomDate(start, end, prop):
 dates = []
 
 for i in range(0, 200):
-    dates.append(randomDate("1960-01-01", "2018-01-01", random.random()))
-
-print (dates[i])
-
+    dates.append(randomDate("1960-01-01", "1985-01-01", random.random()))
+    
 deaths = []
 
 for i in range(0, 200):
@@ -87,12 +86,35 @@ db = mariadb.connect(host="127.0.0.1", user="root", password=passwd, database="d
 
 cursor = db.cursor()
 
+
+# Insert person data
 for i in range(0, 200):
     # print (personUids[i], data[i])
     sql = "insert into person (PersonUid, Active, FirstName, LastName, MiddleName, Ssn, BirthDate, DeceasedBool, Gender, Address) VALUES ('%s', 1, '%s', '%s', '%s', '%s', '%s', %i, '%s', '%s')" % (personUids[i], firstnames[random.randint(0, 4700)], lastnames[random.randint(0, 4700)], firstnames[random.randint(0, 4700)], ssns[i], dates[i], deaths[i], genders[i], addresses[i])
-    # print (sql)
     output = cursor.execute(sql)
-    # print (data)
     db.commit()
+
+
+cursor.execute("select PersonUid from person")
+
+elgiblepat = []
+
+i = 0;
+for row in cursor.fetchall():
+    if (i == 75):
+        break;
+    elgiblepat.append(row[0])
+    i += 1
+
+def genMRN():
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
+
+for patient in elgiblepat:
+    sql = "insert into patient (PatientUid, MedicalRecordNumber, ArrivalDate, ReleaseDate, Condition) VALUES ('%s', '%s', '%s', '%s', '%s')" % (patient, genMRN(), randomDate("1985-01-02", "1999-01-01", random.random()), randomDate("1999-01-02", "2008-01-01", random.random()), "")
+    print (sql)
+    #output = cursor.execute(sql)
+    #db.commit()
+
+
 
 db.close()
