@@ -1,6 +1,9 @@
 from sys import platform
 from datetime import datetime
-import mysql.connector as mysql
+if (platform == "linux" or platform == "linux2"):
+    import mysql.connector as mariadb
+else:
+    import mysql.connector as mysql
 import uuid
 import random
 import time
@@ -135,8 +138,8 @@ with open('qualifications') as f:
 
 i = 0;
 for e in hemployees:
-    salary = int("%i%i%i%i%i.%i%i") % (random.randint(6, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9))
-    sql = "insert into hospitalemployee (HEmployeeUid, Qualification, Salary) VALUES ('%s', '%s', %s)" % (e, quals[i], salary)
+    salary = "%i%i%i%i%i.%i%i" % (random.randint(6, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9))
+    sql = "insert into hospitalemployee (HEmployeeUid, Qualification, Salary) VALUES ('%s', '%s', %d)" % (e[0], quals[i], float(salary))
     print (sql)
     output = cursor.execute(sql)
     db.commit()
