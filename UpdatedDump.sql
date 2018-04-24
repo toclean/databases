@@ -1,15 +1,15 @@
-CREATE DATABASE  IF NOT EXISTS `dbproject` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+CREATE DATABASE  IF NOT EXISTS `dbproject` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 USE `dbproject`;
--- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.11, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: dbproject
+-- Host: localhost    Database: dbproject
 -- ------------------------------------------------------
--- Server version	5.5.5-10.1.32-MariaDB
+-- Server version	8.0.11
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,11 +23,11 @@ USE `dbproject`;
 
 DROP TABLE IF EXISTS `doctor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `doctor` (
-  `DoctorUid` varchar(35) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `NpiNumber` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DEANumber` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `DoctorUid` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NpiNumber` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DEANumber` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`DoctorUid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -47,9 +47,9 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `hospital`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `hospital` (
-  `HospitalUid` varchar(35) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `HospitalUid` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `NumberOfRooms` int(11) DEFAULT NULL,
   PRIMARY KEY (`HospitalUid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -70,9 +70,9 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `hospitalemployee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `hospitalemployee` (
-  `HEmployeeUid` varchar(32) NOT NULL,
+  `HEmployeeUid` varchar(37) NOT NULL,
   `Qualification` varchar(45) NOT NULL,
   `Salary` double DEFAULT NULL,
   PRIMARY KEY (`HEmployeeUid`)
@@ -94,7 +94,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `medication`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `medication` (
   `MedicationUid` varchar(32) NOT NULL,
   `Code` varchar(45) DEFAULT NULL,
@@ -124,11 +124,11 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `nurse`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `nurse` (
-  `NurseUid` varchar(35) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DoctorUid` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `PatientCount` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `NurseUid` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DoctorUid` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `PatientCount` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`NurseUid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -148,13 +148,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `patient`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `patient` (
-  `PatientUid` varchar(32) NOT NULL,
+  `PatientUid` varchar(37) NOT NULL,
   `MedicalRecordNumber` varchar(45) DEFAULT NULL,
   `ArrivalDate` date NOT NULL,
   `ReleaseDate` date DEFAULT NULL,
-  `Condition` varchar(45) DEFAULT NULL,
+  `Condition` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`PatientUid`),
   CONSTRAINT `FK_PatientUid` FOREIGN KEY (`PatientUid`) REFERENCES `person` (`personuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -175,7 +175,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `person`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `person` (
   `Active` tinyint(4) NOT NULL,
   `PersonUid` varchar(37) NOT NULL,
@@ -207,12 +207,12 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `room`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `room` (
-  `RoomUid` varchar(35) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `RoomUid` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `RoomNumber` int(11) NOT NULL,
   `Occupied` tinyint(4) NOT NULL,
-  `RoomType` varchar(45) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `RoomType` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `NumberOfBeds` int(11) NOT NULL,
   PRIMARY KEY (`RoomUid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -244,4 +244,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-23 20:45:34
+-- Dump completed on 2018-04-24  0:01:42
