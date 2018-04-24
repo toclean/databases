@@ -126,21 +126,17 @@ for patient in elgiblepat:
     db.commit()
     i += 1
 
-hemployees = []
-
 # Insert HEmployee data
 cursor.execute("SELECT PersonUid FROM person WHERE PersonUid not in (select patient.PatientUid FROM patient)")
-for e in cursor.fetchall():
-    print(e)
-    hemployees.append(e)
+hemployees = cursor.fetchall()
 
 with open('qualifications') as f:
     quals = [x.strip() for x in f.readlines()]
 
 i = 0;
 for e in hemployees:
-    salary = "%i%i%i%i%i.%i%i" % (random.randint(6, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9))
-    sql = "insert into hospitalemployee (HEmployeeUid, Qualification, Salary) VALUES ('%s', '%s', %d)" % (e, quals[i], float(salary))
+    salary = int("%i%i%i%i%i.%i%i") % (random.randint(6, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9))
+    sql = "insert into hospitalemployee (HEmployeeUid, Qualification, Salary) VALUES ('%s', '%s', %s)" % (e, quals[i], salary)
     print (sql)
     output = cursor.execute(sql)
     db.commit()
