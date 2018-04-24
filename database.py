@@ -124,7 +124,11 @@ with open('conditions') as f:
 # Insert patient data
 i = 0;
 for patient in elgiblepat:
-    sql = "insert into patient (PatientUid, MedicalRecordNumber, ArrivalDate, ReleaseDate, `Condition`) VALUES ('%s', '%s', '%s', '%s', '%s')" % (patient, genMRN(), randomDate(2012, 2012, 1, 3, 1, 2), randomDate(2012, 2012, 4, 5, 1, 2), conds[i])
+    if (i < 5):
+        date = randomDate(2012, 2012, 3, 4, 1, 30)
+    else:
+        date = None
+    sql = "insert into patient (PatientUid, MedicalRecordNumber, ArrivalDate, ReleaseDate, `Condition`) VALUES ('%s', '%s', '%s', '%s', '%s')" % (patient, genMRN(), randomDate(2012, 2012, 1, 3, 1, 27), date, conds[i])
     output = cursor.execute(sql)
     db.commit()
     i += 1
@@ -140,9 +144,21 @@ i = 0;
 for e in hemployees:
     salary = "%i%i%i%i%i.%i%i" % (random.randint(6, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9))
     sql = "insert into hospitalemployee (HEmployeeUid, Qualification, Salary) VALUES ('%s', '%s', %d)" % (e[0], quals[i], float(salary))
-    print (sql)
     output = cursor.execute(sql)
     db.commit()
     i += 1
+
+cursor.execute("SELECT HEmployeeUid FROM hospitalemployee LIMIT 10");
+doctors = cursor.fetchall()
+
+for doctor in doctors:
+    sql = "insert into doctor (
+
+cursor.execute("SELECT HEmployeeUid FROM hospitalemployee WHERE HEmployeeUid NOT IN (SELECT DoctorUid FROM doctor)")
+nurses = cursor.fetchall()
+
+for nurse in nurses:
+    sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurse[0], )
+    print (nurse[0])
 
 db.close()
