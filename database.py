@@ -75,6 +75,9 @@ for i in range(0, 200):
     else:
         genders.append("Female");
 
+with open('street-addresses') as f:
+    addresses = [x.strip() for x in f.readlines()]
+
 with open('creds') as f:
     creds = [x.strip() for x in f.readlines()]
 
@@ -86,7 +89,7 @@ cursor = db.cursor()
 
 for i in range(0, 200):
     # print (personUids[i], data[i])
-    sql = "insert into person (PersonUid, Active, FirstName, LastName, MiddleName, Ssn, BirthDate, DeceasedBool, Gender) VALUES ('%s', 1, '%s', '%s', '%s', '%s', '%s', %i, '%s')" % (personUids[i], firstnames[random.randint(0, 4700)], lastnames[random.randint(0, 4700)], firstnames[random.randint(0, 4700)], ssns[i], dates[i], deaths[i], genders[i])
+    sql = "insert into person (PersonUid, Active, FirstName, LastName, MiddleName, Ssn, BirthDate, DeceasedBool, Gender, Address) VALUES ('%s', 1, '%s', '%s', '%s', '%s', '%s', %i, '%s', '%s')" % (personUids[i], firstnames[random.randint(0, 4700)], lastnames[random.randint(0, 4700)], firstnames[random.randint(0, 4700)], ssns[i], dates[i], deaths[i], genders[i], addresses[i])
     # print (sql)
     output = cursor.execute(sql)
     # print (data)
