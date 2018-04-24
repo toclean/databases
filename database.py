@@ -151,14 +151,22 @@ for e in hemployees:
 cursor.execute("SELECT HEmployeeUid FROM hospitalemployee LIMIT 10");
 doctors = cursor.fetchall()
 
+def genNum(x):
+    nums = ""
+    for i in range(1,x):
+        nums += str(random.randint(1,9))
+    return nums;
+
 for doctor in doctors:
-    sql = "insert into doctor (
+    sql = "insert into doctor (DoctorUid, NpiNumber, DEANumber) VALUES ('%s', '%s', '%s')" % (doctor[0], genNum(10), genNum(7))
+    output = cursor.execute(sql)
+    db.commit()
 
 cursor.execute("SELECT HEmployeeUid FROM hospitalemployee WHERE HEmployeeUid NOT IN (SELECT DoctorUid FROM doctor)")
 nurses = cursor.fetchall()
 
 for nurse in nurses:
-    sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurse[0], )
+    #sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurse[0], )
     print (nurse[0])
 
 db.close()
