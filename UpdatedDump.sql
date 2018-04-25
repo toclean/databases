@@ -25,11 +25,11 @@ DROP TABLE IF EXISTS `doctor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `doctor` (
-  `DoctorUid` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `DoctorUid` char(37) COLLATE utf8_bin NOT NULL,
   `NpiNumber` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `DEANumber` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`DoctorUid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -49,7 +49,7 @@ DROP TABLE IF EXISTS `hospital`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `hospital` (
-  `HospitalUid` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `HospitalUid` char(37) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `NumberOfRooms` int(11) DEFAULT NULL,
   PRIMARY KEY (`HospitalUid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS `hospitalemployee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `hospitalemployee` (
-  `HEmployeeUid` varchar(37) NOT NULL,
+  `HEmployeeUid` char(37) NOT NULL,
   `Qualification` varchar(45) NOT NULL,
   `Salary` double DEFAULT NULL,
   PRIMARY KEY (`HEmployeeUid`)
@@ -96,7 +96,7 @@ DROP TABLE IF EXISTS `medication`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `medication` (
-  `MedicationUid` varchar(32) NOT NULL,
+  `MedicationUid` char(37) NOT NULL,
   `Code` varchar(45) DEFAULT NULL,
   `Name` varchar(45) DEFAULT NULL,
   `Dosage` varchar(45) DEFAULT NULL,
@@ -126,11 +126,11 @@ DROP TABLE IF EXISTS `nurse`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `nurse` (
-  `NurseUid` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `NurseUid` char(37) COLLATE utf8_bin NOT NULL,
   `DoctorUid` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `PatientCount` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`NurseUid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,13 +150,12 @@ DROP TABLE IF EXISTS `patient`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `patient` (
-  `PatientUid` varchar(37) NOT NULL,
+  `PatientUid` char(37) NOT NULL,
   `MedicalRecordNumber` varchar(45) DEFAULT NULL,
   `ArrivalDate` date NOT NULL,
   `ReleaseDate` date DEFAULT NULL,
   `Condition` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`PatientUid`),
-  CONSTRAINT `FK_PatientUid` FOREIGN KEY (`PatientUid`) REFERENCES `person` (`personuid`)
+  PRIMARY KEY (`PatientUid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -177,8 +176,8 @@ DROP TABLE IF EXISTS `person`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `person` (
-  `Active` tinyint(4) NOT NULL,
-  `PersonUid` varchar(37) NOT NULL,
+  `Active` tinyint(1) NOT NULL,
+  `PersonUid` char(37) NOT NULL,
   `FirstName` varchar(90) DEFAULT NULL,
   `LastName` varchar(45) DEFAULT NULL,
   `MiddleName` varchar(45) DEFAULT NULL,
@@ -202,6 +201,74 @@ LOCK TABLES `person` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pharmacist`
+--
+
+DROP TABLE IF EXISTS `pharmacist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `pharmacist` (
+  `PharmacistUid` char(37) COLLATE utf8_bin NOT NULL,
+  `DEANumber` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`PharmacistUid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pharmacist`
+--
+
+LOCK TABLES `pharmacist` WRITE;
+/*!40000 ALTER TABLE `pharmacist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pharmacist` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pharmacy_employee`
+--
+
+DROP TABLE IF EXISTS `pharmacy_employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `pharmacy_employee` (
+  `PEmployeeUid` char(37) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`PEmployeeUid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pharmacy_employee`
+--
+
+LOCK TABLES `pharmacy_employee` WRITE;
+/*!40000 ALTER TABLE `pharmacy_employee` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pharmacy_employee` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pharmacy_technician`
+--
+
+DROP TABLE IF EXISTS `pharmacy_technician`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `pharmacy_technician` (
+  `PTechUid` char(37) COLLATE utf8_bin NOT NULL,
+  `ManagerUid` char(37) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`PTechUid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pharmacy_technician`
+--
+
+LOCK TABLES `pharmacy_technician` WRITE;
+/*!40000 ALTER TABLE `pharmacy_technician` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pharmacy_technician` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `room`
 --
 
@@ -209,7 +276,7 @@ DROP TABLE IF EXISTS `room`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `room` (
-  `RoomUid` varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `RoomUid` char(37) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `RoomNumber` int(11) NOT NULL,
   `Occupied` tinyint(4) NOT NULL,
   `RoomType` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -244,4 +311,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-24  0:01:42
+-- Dump completed on 2018-04-24 22:26:57
