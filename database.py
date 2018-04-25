@@ -214,19 +214,20 @@ techs = []
 for p in premain:
     techs.append(p[0])
 
+pharmtech = []
+
+# insert pharmtech data
+for i in range(0, len(pharm)):
+    for j in range(0, math.ceil(len(techs)/len(pharm))):
+        pharmtech.append(pharm[i])
+
+for i in range(0, len(techs)):
+    sql = "insert into pharmacy_technician (PTechUid, ManagerUid) VALUES ('%s', '%s')" % (techs[i], pharmtech[i])
+    cursor.execute(sql)
+
+# print (pharmtech[0], pharmtech[1])
 
 
-i = 0
-flag = 0
-temp = techs[0]
-for pharm in pharm:
-    if (flag == 0 && i < 4):
-        sql = "insert into pharmacy_technician (PTechUid, ManagerUid) VALUES ('%s', '%s')" % (temp, pharm)
-        cursor.execute(sql)
-    else:
-        flag = 1
-        i = 0
-        temp = 
 
 db.commit()
 
