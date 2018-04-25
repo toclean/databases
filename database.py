@@ -18,6 +18,7 @@ numHEmployees = .25 * numPersons
 numPatients = .75 * numPersons
 numPTech = .75 * numPEmployees
 numPharm = .25 * numPEmployees
+numPatientsPerRoom = 5
 
 # load firstnames
 with open('first-names') as f:
@@ -225,8 +226,13 @@ for i in range(0, len(techs)):
     sql = "insert into pharmacy_technician (PTechUid, ManagerUid) VALUES ('%s', '%s')" % (techs[i], pharmtech[i])
     cursor.execute(sql)
 
-# print (pharmtech[0], pharmtech[1])
 
+# insert hospital data
+cursor.execute("insert into hospital (HospitalUid, NumberOfRooms) VALUES ('%s', '%s')" % (uuid.uuid4(), numNurses))
+
+# insert data for rooms
+for i in range(0, math.ceil(numNurses)):
+    cursor.execute("insert into room (RoomUid, RoomNumber, Occupied, RoomType, NumberOfBeds)" % (uuid.uuid4(), i, 1, "FIX", 5))
 
 
 db.commit()
