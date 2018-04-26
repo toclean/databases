@@ -219,7 +219,7 @@ pharmtech = []
 
 # insert pharmtech data
 for i in range(0, len(pharm)):
-    for j in range(0, math.ceil(len(techs)/len(pharm))):
+    for j in range(0, int(math.ceil(len(techs)/len(pharm)))):
         pharmtech.append(pharm[i])
 
 for i in range(0, len(techs)):
@@ -231,8 +231,8 @@ for i in range(0, len(techs)):
 cursor.execute("insert into hospital (HospitalUid, NumberOfRooms) VALUES ('%s', '%s')" % (uuid.uuid4(), numNurses))
 
 # insert data for rooms
-for i in range(0, math.ceil(numNurses)):
-    cursor.execute("insert into room (RoomUid, RoomNumber, Occupied, RoomType, NumberOfBeds)" % (uuid.uuid4(), i, 1, "FIX", 5))
+for i in range(0, int(math.ceil(numNurses))):
+    cursor.execute("insert into room (RoomUid, RoomNumber, Occupied, RoomType, NumberOfBeds) VALUES ('%s', '%s', '%s', '%s', '%s')" % (uuid.uuid4(), i+1, 1, "FIX", 5))
 
 
 db.commit()
