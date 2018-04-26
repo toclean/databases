@@ -187,13 +187,13 @@ for z in range(0, len(doctorData)):
 cursor.execute("SELECT PersonUid FROM person WHERE PersonUid not in (SELECT DoctorUid FROM doctor) and PersonUid not in (SELECT NurseUid FROM nurse) and PersonUid not in (SELECT PatientUid FROM patient)")
 peDate = cursor.fetchall()
 
-pharms = []
+pharmsmep = []
 
 for pe in peDate:
-    pharms.append(pe[0])
+    pharmsmep.append(pe[0])
 
-for i in range(0, len(pharms)):
-    sql = "insert into pharmacy_employee (PEmployeeUid) VALUES ('%s')" % (pharms[i])
+for i in range(0, len(pharmsmep)):
+    sql = "insert into pharmacy_employee (PEmployeeUid) VALUES ('%s')" % (pharmsmep[i])
     cursor.execute(sql)
 
 cursor.execute("SELECT PEmployeeUid FROM pharmacy_employee LIMIT %s" % int(numPharm))
@@ -286,6 +286,38 @@ for med in meds:
 for i in range(0, len(meds)):
     sql = "insert into maintains (MedicationUid, PharmacyUid) VALUES ('%s', '%s')" % (meds[i][0], maintains[i])
     cursor.execute(sql)
+
+pharmacy_works_for = []
+
+for i in range(0, len(pharmsarry)):
+    for j in range(0, int(math.ceil(len(pharmsmep)/len(pharmsarry)))):
+        pharmacy_works_for.append(pharmsarry[i])
+
+for i in range(0, len(pharmacy_works_for)):
+    sql = "insert into pharmacy_works_for (PEmployeeUid, PharmacyUid) VALUES ('%s', '%s')" % (pharmsmep[i], pharmacy_works_for[i])
+    cursor.execute(sql)
+
+cursor.execute("SELECT PTechUid, ManagerUid FROM pharmacy_technician")
+
+for tech in cursor.fetchall():
+    cursor.execute("insert into pharmacist_oversees (PTechUid, PharmacistUid) VALUES ('%s', '%s')" % (tech[0], tech[1]))
+
+cursor.execute("SELECT NurseUid, DoctorUid FROM nurse")
+
+for nurse in cursor.fetchall():
+    cursor.execute("insert into advises (NurseUid, DoctorUid) VALUES ('%s', '%s')" % (nurse[0], nurse[1]))
+
+cursor.execute("SELECT HospitalUid FROM hospital")
+
+hosuid = cursor.fetchall()[0]
+
+for e in hemployees:
+    cursor.execute("insert into hospital_works_for (HEmployeeUid, HospitalUid) VALUES ('%s', '%s')" % (e[0], hosuid[0]))
+
+cursor.execute("SELECT RoomUid FROM ROOM")
+
+for room in cursor.fetchall():
+    cursor.execute("insert into has (RoomUid, HospitalUid) VALUES ('%s', '%s')" % (room[0], hosuid[0]))
 
 db.commit()
 
