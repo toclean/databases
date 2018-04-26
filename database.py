@@ -1,5 +1,5 @@
 from sys import platform
-from datetime import datetime
+from datetime import datetime, timedelta
 if (platform == "linux" or platform == "linux2"):
     import mysql.connector as mariadb
 else:
@@ -19,6 +19,7 @@ numPatients = .75 * numPersons
 numPTech = .75 * numPEmployees
 numPharm = .25 * numPEmployees
 numPatientsPerRoom = 5
+numMedication = 200
 
 # load firstnames
 with open('first-names') as f:
@@ -230,10 +231,61 @@ for i in range(0, len(techs)):
 # insert hospital data
 cursor.execute("insert into hospital (HospitalUid, NumberOfRooms) VALUES ('%s', '%s')" % (uuid.uuid4(), numNurses))
 
+types = ["Surgery", "Testing", "Nursing", "ICU", "Severe", "Stable"]
+
 # insert data for rooms
 for i in range(0, int(math.ceil(numNurses))):
-    cursor.execute("insert into room (RoomUid, RoomNumber, Occupied, RoomType, NumberOfBeds) VALUES ('%s', '%s', '%s', '%s', '%s')" % (uuid.uuid4(), i+1, 1, "FIX", 5))
+    cursor.execute("insert into room (RoomUid, RoomNumber, Occupied, RoomType, NumberOfBeds) VALUES ('%s', '%s', '%s', '%s', '%s')" % (uuid.uuid4(), i+1, 1, types[random.randint(0, len(types) - 1)], 5))
 
+# insert data for pharmacy
+for i in range(0, int(numPEmployees / 50)):
+    cursor.execute("insert into pharmacy (PharmacyUid) VALUES ('%s')" % uuid.uuid4())
+
+# get medication names
+with open('medication-names') as f:
+    meds = [x.strip() for x in f.readlines()]
+
+with open('medication-descriptions') as f:
+    desc = [x.strip() for x in f.readlines()]
+
+method = ["Oral", "Intravenous"]
+
+# insert data for medication
+for i in range(0, numMedication):
+    start = datetime.now()#datetime.strptime("%Y-%d-%m")
+    end = start + timedelta(days=random.randint(0, 60))
+    cursor.execute("insert into medication (MedicationUid, Name, Code, Start, End, Units_Per_Day, Description, Dosage, Method) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', \"%s\", '%s', '%s')" % (uuid.uuid4(), meds[random.randint(0, len(meds) - 1)], genNum(8), start, end, random.randint(1, 4), desc[random.randint(0, len(desc) - 1)], str(random.randint(25, 300)) + "mg", method[random.randint(0, 1)]))
+
+cursor.execute("SELECT MedicationUid FROM medication")
+meds = cursor.fetchall()
+
+medarry = []
+
+for i in meds:
+    medarry.append(meds[0])
+
+
+cursor.execute("SELECT PharmacyUid FROM pharmacy")
+pharms = cursor.fetchall()
+
+pharmsarry = []
+
+for pharm in pharms:
+    pharmsarry.append(pharm[0])
+
+maintains = []
+
+for i in range(0, len(pharmsarry)):
+    for j in range(0, int(math.ceil(len(medarry)/len(pharmsarry)))):
+        maintains.append(pharmsarry[i])
+
+# insert data for pharmaceutical_supplies
+for med in meds:
+    cursor.execute("insert into pharmaceutical_supplies (MedicationUid, Quantity, Cost_Per_Unit, Reorder_Amount) VALUES ('%s', '%s', '%s', '%s')" % (med[0], str(random.randint(0, 400)) + "g", str(round(random.uniform(25,1000), 2)), random.randint(25, 300)))
+
+for i in range(0, len(meds)):
+    sql = "insert into maintains (MedicationUid, PharmacyUid) VALUES ('%s', '%s')" % (meds[i][0], maintains[i])
+    cursor.execute(sql)
 
 db.commit()
 
