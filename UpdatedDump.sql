@@ -433,7 +433,7 @@ DROP TABLE IF EXISTS `pharmacy_employee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `pharmacy_employee` (
-  `PEmployeeUid` char(37) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `PEmployeeUid` char(37) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`PEmployeeUid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -504,8 +504,8 @@ DROP TABLE IF EXISTS `prescribes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `prescribes` (
-  `MedicationUid` char(37) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `DoctorUid` char(37) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `MedicationUid` char(37) COLLATE utf8_bin NOT NULL,
+  `DoctorUid` char(37) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`MedicationUid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
