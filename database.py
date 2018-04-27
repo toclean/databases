@@ -1,3 +1,4 @@
+# Cross-platform friendly imports
 from sys import platform
 from datetime import datetime, timedelta
 if (platform == "linux" or platform == "linux2"):
@@ -10,6 +11,7 @@ import time
 import string
 import math
 
+# Setting up our population statistics
 numPersons = 1000
 numPatients = .60 * numPersons # 600
 numHEmployees = .40 * numPersons # 400
@@ -17,9 +19,9 @@ numDocs = .25 * numHEmployees # 100
 numNurses = .50 * numHEmployees # 200
 numPEmployees = .25 * numHEmployees # 100
 
-
 numPTech = .75 * numPEmployees # 75
 numPharm = .25 * numPEmployees # 25
+
 numPatientsPerRoom = 3
 numMedication = numPersons
 
@@ -31,8 +33,7 @@ with open('first-names') as f:
 with open('last-names') as f:
     lastnames = [x.strip() for x in f.readlines()]
 
-# print (data)
-
+# generate the uids for person
 def genUids(list):
     for i in range(0, numPersons):
         list.append(str(uuid.uuid4()))
@@ -40,6 +41,7 @@ def genUids(list):
 personUids = []
 ssns = []
 
+# create fake social security numbers (no malice meant)
 for i in range(0, numPersons):
     rnums = ""
     firstdashflag = 0
@@ -52,7 +54,6 @@ for i in range(0, numPersons):
         rnums += str(random.randint(0, 9))
     ssns.append(rnums)
 
-# print (ssns)
 
 # Create list of personUid
 genUids(personUids)
@@ -66,12 +67,13 @@ def randomDate(sYear, eYear, sMonth, eMonth, sDay, eDay):
 
 dates = []
 
+# generate birth dates for people
 for i in range(0, numPersons):
-    #dates.append(randomDate("1960-01-01", "1985-01-01", random.random()))
     dates.append(randomDate(1960, 1985, 1, 4, 1, 5))
     
 deaths = []
 
+# generate chance of a patient dying
 for i in range(0, numPersons):
     chance = random.randint(0, 50)
     if (chance < 48):
@@ -82,6 +84,7 @@ for i in range(0, numPersons):
 
 genders = []
 
+# change of being male/female (no harm meant)
 for i in range(0, numPersons):
     chance = random.randint(0, 10)
     if (chance <= 5):
@@ -89,14 +92,17 @@ for i in range(0, numPersons):
     else:
         genders.append("Female")
 
+# collecting street addresses from file that I parsed from only sources
 with open('street-addresses') as f:
     addresses = [x.strip() for x in f.readlines()]
 
+# getting users password from the creds file
 with open('creds') as f:
     creds = [x.strip() for x in f.readlines()]
 
 passwd = creds[0]
 
+# connecting to the database based on platform
 if (platform == "linux" or platform == "linux2"):
     db = mariadb.connect(host="127.0.0.1", user="root", password=passwd, database="dbproject")
 else:
@@ -104,19 +110,13 @@ else:
 
 cursor = db.cursor()
 
-# delete previous entries
-sql = "DELETE FROM NURSE"
-output = cursor.execute(sql, multi=True)
-db.commit()
-
-
 # Insert person data
 for i in range(0, numPersons):
     # print (personUids[i], data[i])
     sql = "insert into person (PersonUid, Active, FirstName, LastName, MiddleName, Ssn, BirthDate, DeceasedBool, Gender, Address) VALUES ('%s', 1, '%s', '%s', '%s', '%s', '%s', %i, '%s', '%s')" % (personUids[i], firstnames[random.randint(0, 4700)], lastnames[random.randint(0, 4700)], firstnames[random.randint(0, 4700)], ssns[i], dates[i], deaths[i], genders[i], addresses[random.randint(0, 200)])
     output = cursor.execute(sql)
 
-
+# get people from database
 cursor.execute("select PersonUid from person")
 
 elgiblepat = []
@@ -128,9 +128,11 @@ for row in cursor.fetchall():
     elgiblepat.append(row[0])
     i += 1
 
+# generate mrns
 def genMRN():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
 
+# read conditions from file i parsed from online sources
 with open('conditions') as f:
     conds = [x.strip() for x in f.readlines()]
 
@@ -145,9 +147,11 @@ for patient in elgiblepat:
 cursor.execute("SELECT PersonUid FROM person WHERE PersonUid not in (select patient.PatientUid FROM patient)")
 hemployees = cursor.fetchall()
 
+# read qualifications again from only sources that i parsed
 with open('qualifications') as f:
     quals = [x.strip() for x in f.readlines()]
 
+# insert HEmployee data
 i = 0
 for e in hemployees:
     salary = "%i%i%i%i%i.%i%i" % (random.randint(6, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9), random.randint(1, 9))
@@ -158,12 +162,14 @@ for e in hemployees:
 cursor.execute("SELECT HEmployeeUid FROM hospitalemployee LIMIT %d" % numDocs)
 doctorData = cursor.fetchall()
 
+# function used for generating random numbers
 def genNum(x):
     nums = ""
     for i in range(1,x):
         nums += str(random.randint(1,9))
     return nums
 
+# insert doctor data
 for doctor in doctorData:
     sql = "insert into doctor (DoctorUid, NpiNumber, DEANumber) VALUES ('%s', '%s', '%s')" % (doctor[0], genNum(10), genNum(7))
     output = cursor.execute(sql)
@@ -176,6 +182,7 @@ nurses = []
 for nurse in nurseData:
     nurses.append(nurse[0])
 
+# insert nurse data
 i = 0
 j = 1
 for z in range(0, len(doctorData)):
@@ -191,6 +198,7 @@ peDate = cursor.fetchall()
 
 pharmsmep = []
 
+# insert pharmacy_employee data
 for pe in peDate:
     pharmsmep.append(pe[0])
 
@@ -206,6 +214,7 @@ pharm = []
 for pe in pemp:
     pharm.append(pe[0])
 
+# insert pharmacist data
 for p in pharm:
     sql = "insert into pharmacist (PharmacistUid, DEANumber) VALUES ('%s', '%s')" % (p, genNum(7))
     cursor.execute(sql)
@@ -266,7 +275,6 @@ medarry = []
 for i in meds:
     medarry.append(meds[0])
 
-
 cursor.execute("SELECT PharmacyUid FROM pharmacy")
 pharms = cursor.fetchall()
 
@@ -285,6 +293,7 @@ for i in range(0, len(pharmsarry)):
 for med in meds:
     cursor.execute("insert into pharmaceutical_supplies (MedicationUid, Quantity, Cost_Per_Unit, Reorder_Amount) VALUES ('%s', '%s', '%s', '%s')" % (med[0], str(random.randint(0, 400)) + "g", str(round(random.uniform(25,1000), 2)), random.randint(25, 300)))
 
+# insert maintains data
 for i in range(0, len(meds)):
     sql = "insert into maintains (MedicationUid, PharmacyUid) VALUES ('%s', '%s')" % (meds[i][0], maintains[i])
     cursor.execute(sql)
@@ -295,17 +304,20 @@ for i in range(0, len(pharmsarry)):
     for j in range(0, int(math.ceil(len(pharmsmep)/len(pharmsarry)))):
         pharmacy_works_for.append(pharmsarry[i])
 
+# insert pharmacy_works_for data
 for i in range(0, len(pharmacy_works_for)):
     sql = "insert into pharmacy_works_for (PEmployeeUid, PharmacyUid) VALUES ('%s', '%s')" % (pharmsmep[i], pharmacy_works_for[i])
     cursor.execute(sql)
 
 cursor.execute("SELECT PTechUid, ManagerUid FROM pharmacy_technician")
 
+# insert pharmacist_oversees data
 for tech in cursor.fetchall():
     cursor.execute("insert into pharmacist_oversees (PTechUid, PharmacistUid) VALUES ('%s', '%s')" % (tech[0], tech[1]))
 
 cursor.execute("SELECT NurseUid, DoctorUid FROM nurse")
 
+# insert advises data
 for nurse in cursor.fetchall():
     cursor.execute("insert into advises (NurseUid, DoctorUid) VALUES ('%s', '%s')" % (nurse[0], nurse[1]))
 
@@ -313,11 +325,13 @@ cursor.execute("SELECT HospitalUid FROM hospital")
 
 hosuid = cursor.fetchall()[0]
 
+# insert hospital_works_for data
 for e in hemployees:
     cursor.execute("insert into hospital_works_for (HEmployeeUid, HospitalUid) VALUES ('%s', '%s')" % (e[0], hosuid[0]))
 
 cursor.execute("SELECT RoomUid FROM ROOM")
 
+# insert has data
 for room in cursor.fetchall():
     cursor.execute("insert into has (RoomUid, HospitalUid) VALUES ('%s', '%s')" % (room[0], hosuid[0]))
 
@@ -334,6 +348,7 @@ for i in range(0, len(doctors)):
     for j in range(0, int(math.ceil(len(medarry)/len(doctors)))):
         prescribes.append(doctors[i])
 
+# insert prescribes data
 for i in range(0, len(prescribes)):
     cursor.execute("insert into prescribes (MedicationUid, DoctorUid) VALUES ('%s', '%s')" % (meds[i][0], prescribes[i]))
 
@@ -351,6 +366,7 @@ for i in range(0, len(nurses)):
 
 cursor.execute("SELECT PatientUid FROM patient")
 
+# insert doctor_oversees data
 i = 0
 for patient in cursor.fetchall():
     cursor.execute("insert into doctor_oversees (PatientUid, NurseUid, DoctorUid) VALUES ('%s', '%s', '%s')" % (patient[0], nursesadj[i][0], nursesadj[i][1]))
@@ -370,6 +386,7 @@ for i in range(0, len(pt)):
 
 cursor.execute("SELECT * FROM patient")
 
+# insert retrieves_medication_from data
 i = 0
 for p in cursor.fetchall():
     cursor.execute("insert into retrieves_medication_from (PatientUid, MedicationUid, PTechUid) VALUES ('%s', '%s', '%s')" % (p[0], medarry[i][0], ptadj[i]))
