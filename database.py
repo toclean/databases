@@ -11,15 +11,17 @@ import string
 import math
 
 numPersons = 1000
-numDocs = .05 * numPersons
-numNurses = .1 * numPersons
-numPEmployees = .1 * numPersons
-numHEmployees = .25 * numPersons
-numPatients = .75 * numPersons
-numPTech = .75 * numPEmployees
-numPharm = .25 * numPEmployees
-numPatientsPerRoom = 5
-numMedication = 200
+numPatients = .60 * numPersons # 600
+numHEmployees = .40 * numPersons # 400
+numDocs = .25 * numHEmployees # 100
+numNurses = .50 * numHEmployees # 200
+numPEmployees = .25 * numHEmployees # 100
+
+
+numPTech = .75 * numPEmployees # 75
+numPharm = .25 * numPEmployees # 25
+numPatientsPerRoom = 3
+numMedication = numPersons
 
 # load firstnames
 with open('first-names') as f:
@@ -177,9 +179,9 @@ for nurse in nurseData:
 i = 0
 j = 1
 for z in range(0, len(doctorData)):
-    sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurses[i], doctorData[z][0], 5)
+    sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurses[i], doctorData[z][0], numPatientsPerRoom)
     cursor.execute(sql)
-    sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurses[j], doctorData[z][0], 5)
+    sql = "insert into nurse (NurseUid, DoctorUid, PatientCount) VALUES ('%s', '%s', '%s')" % (nurses[j], doctorData[z][0], numPatientsPerRoom)
     cursor.execute(sql)
     i += 2
     j += 2
@@ -318,6 +320,60 @@ cursor.execute("SELECT RoomUid FROM ROOM")
 
 for room in cursor.fetchall():
     cursor.execute("insert into has (RoomUid, HospitalUid) VALUES ('%s', '%s')" % (room[0], hosuid[0]))
+
+cursor.execute("SELECT DoctorUid FROM doctor")
+
+doctors = []
+
+for doc in cursor.fetchall():
+    doctors.append(doc[0])
+
+prescribes = []
+
+for i in range(0, len(doctors)):
+    for j in range(0, int(math.ceil(len(medarry)/len(doctors)))):
+        prescribes.append(doctors[i])
+
+for i in range(0, len(prescribes)):
+    cursor.execute("insert into prescribes (MedicationUid, DoctorUid) VALUES ('%s', '%s')" % (meds[i][0], prescribes[i]))
+
+cursor.execute("SELECT NurseUid, DoctorUid FROM advises")
+
+nurses = []
+for n in cursor.fetchall():
+    nurses.append([n[0], n[1]])
+
+nursesadj = []
+
+for i in range(0, len(nurses)):
+    for j in range(0, 3):
+        nursesadj.append([nurses[i][0], nurses[i][1]])
+
+cursor.execute("SELECT PatientUid FROM patient")
+
+i = 0
+for patient in cursor.fetchall():
+    cursor.execute("insert into doctor_oversees (PatientUid, NurseUid, DoctorUid) VALUES ('%s', '%s', '%s')" % (patient[0], nursesadj[i][0], nursesadj[i][1]))
+    i += 1
+
+cursor.execute("SELECT PTechUid from pharmacy_technician")
+pt = []
+
+for p in cursor.fetchall():
+    pt.append(p[0])
+
+ptadj = []
+
+for i in range(0, len(pt)):
+    for j in range(0, 8):
+        ptadj.append(pt[i])
+
+cursor.execute("SELECT * FROM patient")
+
+i = 0
+for p in cursor.fetchall():
+    cursor.execute("insert into retrieves_medication_from (PatientUid, MedicationUid, PTechUid) VALUES ('%s', '%s', '%s')" % (p[0], medarry[i][0], ptadj[i]))
+    i += 1
 
 db.commit()
 
